@@ -60,20 +60,10 @@ plt.rcParams["axes.spines.left"] = False
 plt.rcParams["axes.spines.right"] = False
 plt.rcParams["axes.spines.top"] = False
 
-# Set working directory
-if "CA5" in os.getcwd():
-    os.chdir("..")  # Go up one level if we're in CA3
-
-print(f"Working directory now: {os.getcwd()}")
-
-# Load data
-train_path = os.path.join("CA5", "assets", "train.csv")
-test_path = os.path.join("CA5", "assets", "test.csv")
-
 # Load data
 # 1. Load data
-train_df = pd.read_csv(train_path)
-test_df = pd.read_csv(test_path)
+train_df = pd.read_csv("assets/train.csv")
+test_df = pd.read_csv("assets/test.csv")
 
 
 # %% [markdown]
@@ -101,18 +91,14 @@ def impute_missing(df):
         # Create a mean imputer for numeric columns
         imputer = imp.SimpleImputer(strategy="mean")
         # Then only impute columns that actually have missing values
-        df.loc[:, missing[missing].index] = imputer.fit_transform(
-            df[missing[missing].index]
-        )
+        df.loc[:, missing[missing].index] = imputer.fit_transform(df[missing[missing].index])
 
     # Handle missing values in categorical columns using mode imputation
     if (missing := df[categorical_cols].isnull().any()).any():
         # Create a most frequent (mode) imputer for categorical columns
         imputer = imp.SimpleImputer(strategy="most_frequent")
         # Then only impute columns that actually have missing values
-        df.loc[:, missing[missing].index] = imputer.fit_transform(
-            df[missing[missing].index]
-        )
+        df.loc[:, missing[missing].index] = imputer.fit_transform(df[missing[missing].index])
 
     return df
 
@@ -139,20 +125,12 @@ test_df.info()
 # We will shorten the names of column 12 and 13 for better handling
 
 # %%
-train_df = train_df.rename(
-    columns={"Average Daily Temperature During Growth (celcius)": "Avg Growth Temp (C)"}
-)
-test_df = test_df.rename(
-    columns={"Average Daily Temperature During Growth (celcius)": "Avg Growth Temp (C)"}
-)
+train_df = train_df.rename(columns={"Average Daily Temperature During Growth (celcius)": "Avg Growth Temp (C)"})
+test_df = test_df.rename(columns={"Average Daily Temperature During Growth (celcius)": "Avg Growth Temp (C)"})
 
 # Rename the storage temperature column
-train_df = train_df.rename(
-    columns={"Average Temperature During Storage (celcius)": "Avg Storage Temp (C)"}
-)
-test_df = test_df.rename(
-    columns={"Average Temperature During Storage (celcius)": "Avg Storage Temp (C)"}
-)
+train_df = train_df.rename(columns={"Average Temperature During Storage (celcius)": "Avg Storage Temp (C)"})
+test_df = test_df.rename(columns={"Average Temperature During Storage (celcius)": "Avg Storage Temp (C)"})
 
 print("---TRAIN DATA---")
 train_df.info()
@@ -171,12 +149,8 @@ print(train_df.describe())
 # We will drop storage temp, color and harvest time since these are object types and it will be complicated to interpret these
 
 # %% Removing avg storage temp col
-train_df = train_df.drop(
-    columns=["Avg Storage Temp (C)", "color", "Harvest Time"], axis=1
-)
-test_df = test_df.drop(
-    columns=["Avg Storage Temp (C)", "color", "Harvest Time"], axis=1
-)
+train_df = train_df.drop(columns=["Avg Storage Temp (C)", "color", "Harvest Time"], axis=1)
+test_df = test_df.drop(columns=["Avg Storage Temp (C)", "color", "Harvest Time"], axis=1)
 
 # %% [markdown]
 # ## Log transformation
@@ -317,9 +291,7 @@ print("Distribution of pepper types:")
 print(train_df["is_spicy"])
 
 # %% Prepare data for binary classification
-X_binary = train_df.drop(
-    columns=["Scoville Heat Units (SHU)", "spiciness_labels", "is_spicy"]
-)
+X_binary = train_df.drop(columns=["Scoville Heat Units (SHU)", "spiciness_labels", "is_spicy"])
 y_binary = train_df["is_spicy"]
 
 # Split data for binary classification
@@ -376,9 +348,7 @@ print(met.classification_report(y_test_binary, y_pred_binary))
 
 # Filter training data to only include spicy peppers for regression
 spicy_indices_train = train_df["is_spicy"] == 1
-X_regression = train_df[spicy_indices_train].drop(
-    columns=["Scoville Heat Units (SHU)", "spiciness_labels", "is_spicy"]
-)
+X_regression = train_df[spicy_indices_train].drop(columns=["Scoville Heat Units (SHU)", "spiciness_labels", "is_spicy"])
 y_regression = train_df[spicy_indices_train]["Scoville Heat Units (SHU)"]
 
 # %%
@@ -440,9 +410,7 @@ final_binary_classifier = pipe.Pipeline(
                 n_estimators=binary_cv.best_params_["classifier__n_estimators"],
                 learning_rate=binary_cv.best_params_["classifier__learning_rate"],
                 max_depth=binary_cv.best_params_["classifier__max_depth"],
-                min_samples_split=binary_cv.best_params_[
-                    "classifier__min_samples_split"
-                ],
+                min_samples_split=binary_cv.best_params_["classifier__min_samples_split"],
                 subsample=binary_cv.best_params_["classifier__subsample"],
                 random_state=42,
             ),
@@ -460,12 +428,8 @@ final_regressor = pipe.Pipeline(
             ens.RandomForestRegressor(
                 n_estimators=regression_cv.best_params_["regressor__n_estimators"],
                 max_depth=regression_cv.best_params_["regressor__max_depth"],
-                min_samples_split=regression_cv.best_params_[
-                    "regressor__min_samples_split"
-                ],
-                min_samples_leaf=regression_cv.best_params_[
-                    "regressor__min_samples_leaf"
-                ],
+                min_samples_split=regression_cv.best_params_["regressor__min_samples_split"],
+                min_samples_leaf=regression_cv.best_params_["regressor__min_samples_leaf"],
                 random_state=42,
             ),
         ),

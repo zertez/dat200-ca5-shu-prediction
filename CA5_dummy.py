@@ -49,8 +49,6 @@ from sklearn import (
 
 # %%
 
-np.show_config()
-
 # %% jupyter setup
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", None)
@@ -64,20 +62,11 @@ plt.rcParams["axes.spines.left"] = False
 plt.rcParams["axes.spines.right"] = False
 plt.rcParams["axes.spines.top"] = False
 
-# Set working directory
-if "CA5" in os.getcwd():
-    os.chdir("..")  # Go up one level if we're in CA3
-
-print(f"Working directory now: {os.getcwd()}")
-
-# Load data
-train_path = os.path.join("CA5", "assets", "train.csv")
-test_path = os.path.join("CA5", "assets", "test.csv")
 
 # Load data
 # 1. Load data
-train_df = pd.read_csv(train_path)
-test_df = pd.read_csv(test_path)
+train_df = pd.read_csv("assets/train.csv")
+test_df = pd.read_csv("assets/test.csv")
 
 
 # %% [markdown]
