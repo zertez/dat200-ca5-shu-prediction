@@ -21,7 +21,6 @@ import pandas as pd
 import seaborn as sns
 
 # Scikit-learn with specific imports
-# ruff: noqa: E401
 from sklearn import (
     ensemble as ens,
 )

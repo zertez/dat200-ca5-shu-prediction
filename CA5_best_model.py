@@ -48,8 +48,6 @@ from sklearn import (
 # There is right now apparently a "Heisenbug" which only affects macs with the M4 chips that one in the group members uses. We therefore have to set numpy to ignore all warnings to prevent RuntimeWarning messages from being displayed.
 # https://github.com/numpy/numpy/issues/28687, due to this error we are quite limited to selecting our models.
 
-# %%
-np.seterr(all="ignore")
 
 # %%
 # Setting the styles of plots so that they have same styling throughout
@@ -76,9 +74,9 @@ train_df.info()
 print("---TEST DATA---")
 test_df.info()
 # %% [markdown]
-# Both the test and training data er missing values, we will therefore do imputation and add values to the missing columns based on their mean values.
+# Both the test and training data are missing values, we will therefore do imputation and add values to the missing columns based on their mean values.
 
-# %% Usign smple imputer
+# %% Usign smple imputation
 
 
 def impute_missing(df):

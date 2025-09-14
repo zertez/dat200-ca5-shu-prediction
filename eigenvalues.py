@@ -78,12 +78,7 @@ def trace_matmul(a, b):
     try:
         # Set up tracing
         old_trace = sys.gettrace()
-        sys.settrace(
-            lambda frame, event, arg: print(
-                f"Event: {event}, Function: {frame.f_code.co_name}"
-            )
-            or old_trace
-        )
+        sys.settrace(lambda frame, event, arg: print(f"Event: {event}, Function: {frame.f_code.co_name}") or old_trace)
 
         # Perform the operation
         result = a @ b
