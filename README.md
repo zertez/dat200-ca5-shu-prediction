@@ -2,7 +2,7 @@
 
 **Group 37**
 - Jannicke Ådalen
-- Marcus Dalaker Figenschou  
+- Marcus Dalaker Figenschou
 - Rikke Sellevold Vegstein
 
 ## Project Overview
